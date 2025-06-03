@@ -1,0 +1,30 @@
+{
+  "name": "shillingplus",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node backend/app.js",
+    "deploy": "npx hardhat run scripts/deploy.js --network bscTestnet",
+    "test": "npx hardhat test",
+    "auto-update": "node scripts/auto-update.js"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "mongoose": "^7.0.0",
+    "web3": "^4.0.0",
+    "onfido-sdk": "^1.0.0",
+    "node-cron": "^3.0.0",
+    "react-native": "^0.72.0",
+    "expo-barcode-scanner": "^12.0.0",
+    "@react-navigation/native": "^6.0.0",
+    "@react-navigation/stack": "^6.0.0"
+  },
+  "devDependencies": {
+    "hardhat": "^2.10.0",
+    "@nomiclabs/hardhat-ethers": "^2.0.0",
+    "chai": "^4.3.0",
+    "mocha": "^10.0.0"
+  }
+}
