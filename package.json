@@ -2,29 +2,18 @@
   "name": "shillingplus",
   "version": "1.0.0",
   "scripts": {
-    "start": "node backend/app.js",
-    "deploy": "npx hardhat run scripts/deploy.js --network bscTestnet",
     "test": "npx hardhat test",
-    "auto-update": "node scripts/auto-update.js"
+    "deploy:testnet": "npx hardhat run scripts/deploy/deploy_all.js --network polygon-zkevm-testnet",
+    "deploy:mainnet": "npx hardhat run scripts/deploy/deploy_all.js --network polygon-zkevm-mainnet",
+    "verify": "npx hardhat run scripts/utils/verify.js --network polygon-zkevm-testnet"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.0",
-    "axios": "^1.6.0",
-    "dotenv": "^16.0.0",
-    "express": "^4.18.0",
-    "mongoose": "^7.0.0",
-    "web3": "^4.0.0",
-    "onfido-sdk": "^1.0.0",
-    "node-cron": "^3.0.0",
-    "react-native": "^0.72.0",
-    "expo-barcode-scanner": "^12.0.0",
-    "@react-navigation/native": "^6.0.0",
-    "@react-navigation/stack": "^6.0.0"
+    "@chainlink/contracts": "^0.8.0",
+    "@openzeppelin/contracts": "^4.9.3"
   },
   "devDependencies": {
-    "hardhat": "^2.10.0",
-    "@nomiclabs/hardhat-ethers": "^2.0.0",
-    "chai": "^4.3.0",
-    "mocha": "^10.0.0"
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "dotenv": "^16.3.1",
+    "hardhat": "^2.17.0"
   }
 }

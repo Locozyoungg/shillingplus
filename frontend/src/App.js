@@ -1,20 +1,25 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './screens/HomeScreen';
-import SendScreen from './screens/SendScreen';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Web3Provider } from './contexts/Web3Context';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import KYC from './pages/KYC';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
-const Stack = createStackNavigator();
-
-const App = () => {
+function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Send" component={SendScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Web3Provider>
+      <Router>
+        <Navbar />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/kyc" component={KYC} />
+        </Switch>
+      </Router>
+    </Web3Provider>
   );
-};
+}
 
 export default App;

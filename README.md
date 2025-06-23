@@ -1,110 +1,35 @@
-# ShillingPlus (SHP)
+# ShillingPlus
 
-A dual-token payment system for Kenya, with SHP-R (store of value) and SHP-T (transaction medium), integrated with M-Pesa, banks, and USSD/SMS.
+A decentralized stablecoin platform integrated with Kotani Pay for M-Pesa bridging, built on Polygon zkEVM.
+
+## Overview
+ShillingPlus provides a collateralized stablecoin (SHP-R) and utility token (SHP-T) with:
+- Inflation-adjusted reserves
+- M-Pesa integration
+- Fee management and treasury
+- KYC verification
+- Batch transactions
+
+## Structure
+- **contracts/**: Solidity smart contracts
+- **backend/**: Node.js/Express API
+- **frontend/**: React-based UI
+- **scripts/**: Deployment and utility scripts
+- **test/**: Unit and integration tests
 
 ## Setup
+1. Clone the repo: `git clone <repo-url>`
+2. Install dependencies: `npm install`
+3. Configure `.env` files in root, backend, and frontend directories
+4. Compile contracts: `npx hardhat compile`
+5. Deploy contracts: `npm run deploy:testnet`
+6. Start backend: `cd backend && npm start`
+7. Start frontend: `cd frontend && npm start`
 
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/yourusername/shillingplus.git
-   cd shillingplus
+## Deployment
+- Testnet: Polygon zkEVM Testnet
+- Mainnet: Polygon zkEVM Mainnet
+- Verify contracts: `npm run verify`
 
-Install dependencies:
-
- npm install
-
-Configure environment:
-
- cp .env
-
-Start backend:
-
- npm start
-
-Run frontend:
-
- cd frontend
- npx expo start
-
-Schedule daily updates:
-
- npm run auto-update
-
-Testing
-
- npm test
-
-Roadmap
-Q3 2025: MVP on BSC testnet
-
-Q4 2026: Mainnet launch
-
-2027: Scale to 100,000 users
-
-
-### Deployment Steps
-1. **Initialize Repo**:
-   ```bash
-   git init
-   git remote add origin https://github.com/yourusername/shillingplus.git
-
-Install Tools:
-
- npm install
- npx hardhat
-
-Configure .env:
-Add your BSC private key, admin wallet, and API keys (Safaricom, bank, Onfido, Africa’s Talking).
-
-Use MongoDB Atlas for MONGO_URI.
-
-
-Compile Contracts:
-
- npx hardhat compile
-
-
-Deploy to BSC Testnet:
-
- npm run deploy
-
-Start Backend:
-
- npm start
-
-Run Frontend:
-
- cd frontend
- npx expo start
-
-Schedule Updates:
-
- Install node-cron and schedule auto-update.js daily:
-  
-  const cron = require('node-cron');
-  cron.schedule('0 0 * * *', () => require('./auto-update.js'));
-
-
-Security Measures
-Contracts: Use OpenZeppelin, audit with CertiK (~$3,000) before mainnet.
-
-KYC: Onfido for >500,000 KSH transactions.
-
-Encryption: AES-256 for wallet keys (security.service.js).
-
-Multi-Sig: Use Gnosis Safe for feeCollector and reserve wallets.
-
-Rate Limits: Limit API calls to 100/minute in app.js.
-
-
-Next Steps
-Test: Deploy to BSC testnet, simulate 100 KSH and 1M KSH transactions.
-
-APIs: Secure real M-Pesa (Safaricom Daraja), bank (e.g., KCB), and CBK data APIs.
-
-USSD: Implement Africa’s Talking integration in backend.
-
-Pilot: Target 100 users (e.g., JKUAT students) by Q3 2025.
-
-
-
+## License
+MIT
