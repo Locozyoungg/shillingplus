@@ -75,3 +75,28 @@ main()
     process.exit(1);
   });
 }
+
+// Banks
+const BankIntegratedSHP = await ethers.getContractFactory('BankIntegratedSHP');
+const bankIntegratedSHP = await BankIntegratedSHP.deploy();
+await bankIntegratedSHP.deployed();
+console.log('BankIntegratedSHP deployed to:', bankIntegratedSHP.address);
+
+await bankIntegratedSHP.initialize(
+  shpT.address,
+  shpR.address,
+  treasury.address,
+  royalties.address,
+  kotaniAdapter.address,
+  bankAdapter.address,
+  KSH_ORACLE,
+  ETH_ORACLE,
+  deployer.address
+);
+console.log('BankIntegratedSHP initialized');
+
+await shpT.setBankIntegratedSHP(bankIntegratedSHP.address);
+await shpR.setBankIntegratedSHP(bankIntegratedSHP.address);
+console.log('BankIntegratedSHP configured');
+
+console.log(`BankIntegratedSHP: ${bankIntegratedSHP.address}`);

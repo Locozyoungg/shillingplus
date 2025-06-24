@@ -132,3 +132,21 @@ contract SHP_Reserve is ERC20, Ownable, ReentrancyGuard {
         return (kshValue + ethValue) / 1e8;
     }
 }
+
+// Add to existing SHP_Reserve.sol
+address public bankIntegratedSHP;
+
+function setBankIntegratedSHP(address _bankIntegratedSHP) external onlyOwner {
+    require(_bankIntegratedSHP != address(0), "Invalid address");
+    bankIntegratedSHP = _bankIntegratedSHP;
+}
+
+function mintForDeposit(address to, uint256 amount) external nonReentrant {
+    require(msg.sender == bankAdapter || msg.sender == bankIntegratedSHP, "Only adapters");
+    _mint(to, amount);
+}
+
+function burnForWithdrawal(address from, uint256 amount) external nonReentrant {
+    require(msg.sender == bankAdapter || msg.sender == bankIntegratedSHP, "Only adapters");
+    _burn(from, amount);
+}

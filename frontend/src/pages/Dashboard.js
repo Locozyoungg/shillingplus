@@ -6,6 +6,7 @@ import WalletConnect from '../components/WalletConnect';
 import RoyaltiesWithdraw from '../components/RoyaltiesWithdraw';
 import VestingRelease from '../components/VestingRelease';
 import { useWeb3 } from '../contexts/Web3Context';
+import SaccoSubscription from '../components/SaccoSubscription';
 
 function Dashboard() {
   const { account } = useWeb3();
@@ -72,8 +73,19 @@ function Dashboard() {
           </Card>
         </Col>
       </Row>
+      )}
+      <Row className="mt-4">
+        <Col md={4}>
+          <Card>
+            <Card.Body>
+              <Card.Title>SACCO Subscription</Card.Title>
+              {account ? <SaccoSubscription /> : <p>Connect wallet to subscribe</p>}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </Container>
-  );
+    );
 }
 
 export default Dashboard;

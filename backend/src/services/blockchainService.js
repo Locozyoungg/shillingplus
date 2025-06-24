@@ -3,7 +3,10 @@ const SHPReserveABI = require('../../abis/SHP_Reserve.json');
 const KotaniAdapterABI = require('../../abis/KotaniAdapter.json');
 const ForeverRoyaltiesABI = require('../../abis/ForeverRoyalties.json');
 const VestingABI = require('../../abis/Vesting.json');
+const BankIntegratedSHPAbi = require('../../abis/BankIntegratedSHP.json');
 
+
+const bankIntegratedSHP = new ethers.Contract(process.env.BANK_INTEGRATED_SHP_ADDRESS, BankIntegratedSHPAbi, wallet);
 const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_ZKEVM_RPC);
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
 const reserveContract = new ethers.Contract(process.env.SHP_RESERVE_ADDRESS, SHPReserveABI, wallet);
@@ -58,5 +61,15 @@ exports.releaseVestedTokens = async () => {
     return tx;
   } catch (error) {
     throw new Error(`Vesting release failed: ${error.message}`);
+  }
+};
+
+exports.subscribeSACCO = async (saccoAddress) => {
+  try {
+    const tx = await bankIntegratedSHP.subscribeSACCO({ from: saccoAddress });
+    await tx.wait();
+    return tx;
+  } catch (error) {
+    throw new Error(`SACCO subscription failed: ${error.message}`);
   }
 };

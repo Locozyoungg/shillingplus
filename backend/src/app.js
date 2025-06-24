@@ -25,6 +25,7 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/kyc', kycRoutes);
 app.use('/api/royalties', royaltiesRoutes);
 app.use('/api/vesting', vestingRoutes);
+app.use('/api/sacco', require('./routes/sacco'));
 
 // Error Handler
 app.use(errorHandler);

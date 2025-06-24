@@ -82,3 +82,10 @@ main()
     process.exit(1);
   });
 }
+
+// Banks
+{
+  name: 'BankIntegratedSHP',
+  address: process.env.BANK_INTEGRATED_SHP_ADDRESS,
+  args: [], // Constructor args empty due to initialize
+},
