@@ -10,9 +10,10 @@ import "./SHP_Reserve.sol";
 contract KotaniAdapter is Ownable, ReentrancyGuard {
     SHP_Reserve public immutable shpR;
     IKotani public kotani;
-    
+
     event DepositProcessed(address indexed user, uint256 amount);
     event WithdrawalInitiated(address indexed user, uint256 amount);
+    event EmergencyWithdrawal(address indexed token, address indexed to, uint256 amount);
 
     constructor(address _reserve, address _kotaniAddress) Ownable(msg.sender) {
         require(_reserve != address(0), "Invalid reserve address");
@@ -36,7 +37,7 @@ contract KotaniAdapter is Ownable, ReentrancyGuard {
         require(user != address(0), "Invalid user address");
         require(shpAmount > 0, "Amount must be greater than 0");
         require(bytes(phone).length > 0, "Invalid phone number");
-        
+
         shpR.burn(user, shpAmount);
         kotani.initiateWithdrawal(phone, shpAmount);
         emit WithdrawalInitiated(user, shpAmount);
@@ -45,5 +46,16 @@ contract KotaniAdapter is Ownable, ReentrancyGuard {
     function updateKotaniAddress(address newAddress) external onlyOwner {
         require(newAddress != address(0), "Invalid Kotani address");
         kotani = IKotani(newAddress);
+    }
+
+    function emergencyWithdraw(address _token, address _to, uint256 _amount) external onlyOwner nonReentrant {
+        require(_to != address(0), "Invalid recipient");
+        if (_token == address(0)) {
+            (bool sent,) = _to.call{value: _amount}("");
+            require(sent, "ETH transfer failed");
+        } else {
+            IERC20(_token).safeTransfer(_to, _amount);
+        }
+        emit EmergencyWithdrawal(_token, _to, _amount);
     }
 }

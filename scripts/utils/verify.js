@@ -1,5 +1,6 @@
-const { run } = require('hardhat');
+// shillingplus/scripts/utils/verify.js
 require('dotenv').config();
+const { run } = require('hardhat');
 
 async function main() {
   const contracts = [
@@ -59,6 +60,11 @@ async function main() {
         90_000_000 * 10**18,
       ],
     },
+    {
+      name: 'BankIntegratedSHP',
+      address: process.env.BANK_INTEGRATED_SHP_ADDRESS,
+      args: [], // Constructor args empty due to initialize
+    },
   ];
 
   for (const contract of contracts) {
@@ -81,11 +87,3 @@ main()
     console.error(error);
     process.exit(1);
   });
-}
-
-// Banks
-{
-  name: 'BankIntegratedSHP',
-  address: process.env.BANK_INTEGRATED_SHP_ADDRESS,
-  args: [], // Constructor args empty due to initialize
-},

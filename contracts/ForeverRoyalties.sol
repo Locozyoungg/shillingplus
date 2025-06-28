@@ -9,6 +9,7 @@ import "./interfaces/IUniswapV2Router.sol";
 contract ForeverRoyalties is Ownable, ReentrancyGuard {
     address public immutable creator;
     uint256 public constant CREATOR_SHARE = 15; // 15% forever
+    uint256 public constant MIN_SLIPPAGE = 95; // 5% max slippage
     IUniswapV2Router public uniswapRouter;
     IERC20 public shpT;
     IERC20 public shpR;
@@ -16,6 +17,7 @@ contract ForeverRoyalties is Ownable, ReentrancyGuard {
 
     event RoyaltiesWithdrawn(address indexed creator, uint256 ethAmount);
     event TokensSwapped(address indexed token, uint256 tokenAmount, uint256 ethAmount);
+    event EmergencyWithdrawal(address indexed token, address indexed to, uint256 amount);
 
     constructor(address _shpT, address _shpR, address _uniswapRouter, address _weth) Ownable(msg.sender) {
         require(_shpT != address(0), "Invalid SHP-T address");
@@ -31,7 +33,7 @@ contract ForeverRoyalties is Ownable, ReentrancyGuard {
 
     function withdraw() external nonReentrant {
         require(msg.sender == creator || msg.sender == owner(), "Not authorized");
-        
+
         // Swap SHP-T to ETH
         uint256 shpTBalance = shpT.balanceOf(address(this));
         if (shpTBalance > 0) {
@@ -59,9 +61,12 @@ contract ForeverRoyalties is Ownable, ReentrancyGuard {
         path[0] = token;
         path[1] = weth;
 
+        uint256[] memory amountsExpected = uniswapRouter.getAmountsOut(amount, path);
+        uint256 minAmountOut = (amountsExpected[1] * MIN_SLIPPAGE) / 100;
+
         uint256[] memory amounts = uniswapRouter.swapExactTokensForETH(
             amount,
-            0, // Accept any output amount (for simplicity; add slippage protection in production)
+            minAmountOut, // Slippage protection
             path,
             address(this),
             block.timestamp + 300
@@ -72,6 +77,17 @@ contract ForeverRoyalties is Ownable, ReentrancyGuard {
     function updateRouter(address newRouter) external onlyOwner {
         require(newRouter != address(0), "Invalid router address");
         uniswapRouter = IUniswapV2Router(newRouter);
+    }
+
+    function emergencyWithdraw(address _token, address _to, uint256 _amount) external onlyOwner nonReentrant {
+        require(_to != address(0), "Invalid recipient");
+        if (_token == address(0)) {
+            (bool sent,) = _to.call{value: _amount}("");
+            require(sent, "ETH transfer failed");
+        } else {
+            IERC20(_token).safeTransfer(_to, _amount);
+        }
+        emit EmergencyWithdrawal(_token, _to, _amount);
     }
 
     receive() external payable {}

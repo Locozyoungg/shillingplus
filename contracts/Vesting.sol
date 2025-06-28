@@ -16,6 +16,7 @@ contract Vesting is Ownable, ReentrancyGuard {
 
     event TokensReleased(address indexed beneficiary, uint256 amount);
     event VestingInitialized(address indexed beneficiary, uint256 amount, uint256 startTime);
+    event EmergencyWithdrawal(address indexed token, address indexed to, uint256 amount);
 
     constructor(
         address _token,
@@ -49,7 +50,7 @@ contract Vesting is Ownable, ReentrancyGuard {
         uint256 amount = vested - releasedAmount;
         releasedAmount += amount;
 
-        require(token.transfer(beneficiary, amount), "Token transfer failed");
+        token.transfer(beneficiary, amount);
         emit TokensReleased(beneficiary, amount);
     }
 
@@ -65,5 +66,16 @@ contract Vesting is Ownable, ReentrancyGuard {
 
     function remainingAmount() public view returns (uint256) {
         return totalAmount - releasedAmount;
+    }
+
+    function emergencyWithdraw(address _token, address _to, uint256 _amount) external onlyOwner nonReentrant {
+        require(_to != address(0), "Invalid recipient");
+        if (_token == address(0)) {
+            (bool sent,) = _to.call{value: _amount}("");
+            require(sent, "ETH transfer failed");
+        } else {
+            IERC20(_token).safeTransfer(_to, _amount);
+        }
+        emit EmergencyWithdrawal(_token, _to, _amount);
     }
 }
